@@ -258,8 +258,18 @@ public class NewJFrame extends javax.swing.JFrame {
         jCheckBox4.setText("D | ");
 
         jButton6.setText("Previous question");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText("Next question");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout JautajumiLayout = new javax.swing.GroupLayout(Jautajumi.getContentPane());
         Jautajumi.getContentPane().setLayout(JautajumiLayout);
@@ -535,6 +545,14 @@ public class NewJFrame extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+     previousQuestion();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+     nextQuestion();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -564,6 +582,24 @@ new NewJFrame().setVisible(true);
         });
                         
     }
+    
+    private void previousQuestion() {
+    String selected = null;
+    if (jCheckBox1.isSelected()) selected = "A";
+    else if (jCheckBox2.isSelected()) selected = "B";
+    else if (jCheckBox3.isSelected()) selected = "C";
+    else if (jCheckBox4.isSelected()) selected = "D";
+
+    testSession.saveAnswer(selected);
+
+    if (testSession.hasPrevious()) {
+        testSession.goBack();
+        loadQuestion();
+    } else {
+        JOptionPane.showMessageDialog(Jautajumi, "This is the first question!");
+    }
+}
+    
     private void loadQuestion() {
     Question q = testSession.getCurrentQuestion();
     jLabel13.setText("Question " + (testSession.getCurrentIndex() + 1) + " of " + testSession.getTotalQuestions());
@@ -580,7 +616,6 @@ new NewJFrame().setVisible(true);
 }
 
 private void nextQuestion() {
-    // figure out which checkbox is selected
     String selected = null;
     if (jCheckBox1.isSelected()) selected = "A";
     else if (jCheckBox2.isSelected()) selected = "B";
@@ -592,11 +627,9 @@ private void nextQuestion() {
         return;
     }
 
-    testSession.submitAnswer(selected);
+    testSession.saveAnswer(selected);
 
-    if (testSession.hasNext()) {
-        loadQuestion();
-    } else {
+    if (testSession.isLastQuestion()) {
         TestResult result = testSession.getResult();
         dbService.saveResult(loggedInUser.getId(), result.getCorrect(), result.getTotal(), result.getGrade());
         Jautajumi.dispose();
@@ -607,9 +640,11 @@ private void nextQuestion() {
         QuizResults.setLocationRelativeTo(this);
         QuizResults.setModal(true);
         QuizResults.setVisible(true);
+    } else {
+        testSession.goNext();
+        loadQuestion();
     }
 }
-
 private void showResults() {
     // called from results dialog close button if you add one
 }
