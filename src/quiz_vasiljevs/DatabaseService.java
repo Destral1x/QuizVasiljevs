@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * Servisa klase, kas atbild par visām datubāzes operācijām.
+ * Ielādē savienojuma parametrus no config.properties faila.
  * @author Glebs.Vasiljev
  */
 public class DatabaseService {
@@ -16,7 +18,10 @@ public class DatabaseService {
     private static String PASS;
     private Connection conn;
 
-    
+    /**
+     * Konstruktors, kas ielādē datubāzes parametrus no config.properties
+     * un izveido savienojumu ar Derby datubāzi.
+     */
     public DatabaseService() {
         try {
             Properties props = new Properties();
@@ -34,7 +39,12 @@ public class DatabaseService {
         }
     }
 
-    
+    /**
+     * Mēģina ielogot lietotāju ar norādītajiem datiem.
+     * @param login lietotāja pieteikšanās vārds
+     * @param password lietotāja parole
+     * @return Admin vai Student objekts ja dati ir pareizi, null ja nē
+     */
     public User login(String login, String password) {
         String sql = "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -58,7 +68,15 @@ public class DatabaseService {
         return null;
     }
 
-
+    /**
+     * Pievieno jaunu lietotāju USERS tabulā.
+     * @param firstName lietotāja vārds
+     * @param lastName lietotāja uzvārds
+     * @param login lietotāja pieteikšanās vārds
+     * @param password lietotāja parole
+     * @param role lietotāja loma (admin vai student)
+     * @return true ja lietotājs veiksmīgi pievienots, false ja pieteikšanās vārds jau eksistē
+     */
     public boolean addUser(String firstName, String lastName, String login, String password, String role) {
         String sql = "INSERT INTO USERS (FIRST_NAME, LAST_NAME, LOGIN, PASSWORD, ROLE) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -75,7 +93,10 @@ public class DatabaseService {
         }
     }
 
-    
+    /**
+     * Ielādē visus jautājumus no QUESTIONS tabulas.
+     * @return saraksts ar visiem Question objektiem
+     */
     public List<Question> getQuestions() {
         List<Question> questions = new ArrayList<>();
         String sql = "SELECT * FROM QUESTIONS";
@@ -98,6 +119,13 @@ public class DatabaseService {
         return questions;
     }
 
+    /**
+     * Saglabā studenta testa rezultātu RESULTS tabulā.
+     * @param userId studenta ID
+     * @param score pareizo atbilžu skaits
+     * @param total kopējais jautājumu skaits
+     * @param grade gala atzīme skalā no 1 līdz 10
+     */
     public void saveResult(int userId, int score, int total, int grade) {
         String sql = "INSERT INTO RESULTS (USER_ID, SCORE, TOTAL, GRADE) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
