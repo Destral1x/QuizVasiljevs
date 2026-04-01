@@ -32,13 +32,4 @@ public class User {
         return password.equals(inputPassword);
     }
 }
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
-//testing pull commit through netbeans
+//commit try 2
