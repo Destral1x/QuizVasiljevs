@@ -5,6 +5,8 @@
 package quiz_vasiljevs;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -63,4 +65,39 @@ public class DatabaseService {
             return false;
         }
     }
+    
+    public List<Question> getQuestions() {
+    List<Question> questions = new ArrayList<>();
+    String sql = "SELECT * FROM QUESTIONS";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            questions.add(new Question(
+                rs.getInt("ID"),
+                rs.getString("QUESTION_TEXT"),
+                rs.getString("OPTION_A"),
+                rs.getString("OPTION_B"),
+                rs.getString("OPTION_C"),
+                rs.getString("OPTION_D"),
+                rs.getString("CORRECT_ANSWER")
+            ));
+        }
+    } catch (SQLException e) {
+        System.out.println("getQuestions error: " + e.getMessage());
+    }
+    return questions;
+}
+
+public void saveResult(int userId, int score, int total, int grade) {
+    String sql = "INSERT INTO RESULTS (USER_ID, SCORE, TOTAL, GRADE) VALUES (?, ?, ?, ?)";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ps.setInt(2, score);
+        ps.setInt(3, total);
+        ps.setInt(4, grade);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("saveResult error: " + e.getMessage());
+    }
+}
 }

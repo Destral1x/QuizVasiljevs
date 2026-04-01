@@ -1,5 +1,6 @@
 package quiz_vasiljevs;
 
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -14,6 +15,8 @@ import javax.swing.JOptionPane;
 public class NewJFrame extends javax.swing.JFrame {
 
     private DatabaseService dbService;
+    private TestSession testSession;
+    private User loggedInUser;
 
     /**
      * Creates new form NewJFrame
@@ -457,12 +460,13 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
- String login = jTextField1.getText();
+    String login = jTextField1.getText();
     String password = jTextField2.getText();
 
     User user = dbService.login(login, password);
 
     if (user != null) {
+        loggedInUser = user;
         JOptionPane.showMessageDialog(this, "Logged in successfully!");
         Testa_Sakums.setTitle("Quiz");
         Testa_Sakums.setSize(400, 200);
@@ -484,9 +488,12 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-       Testa_Sakums.dispose();
+    List<Question> allQuestions = dbService.getQuestions();
+    testSession = new TestSession(allQuestions);
+    Testa_Sakums.dispose();
+    loadQuestion();
     Jautajumi.setTitle("Quiz");
-    Jautajumi.setSize(620, 400);
+    Jautajumi.setSize(620, 450);
     Jautajumi.setLocationRelativeTo(this);
     Jautajumi.setModal(true);
     Jautajumi.setVisible(true);
@@ -528,15 +535,11 @@ public class NewJFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
@@ -545,6 +548,55 @@ new NewJFrame().setVisible(true);
         });
                         
     }
+    private void loadQuestion() {
+    Question q = testSession.getCurrentQuestion();
+    jLabel13.setText("Question " + (testSession.getCurrentIndex() + 1) + " of " + testSession.getTotalQuestions());
+    jLabel14.setText(q.getQuestionText());
+    jCheckBox1.setText("A | " + q.getOptionA());
+    jCheckBox2.setText("B | " + q.getOptionB());
+    jCheckBox3.setText("C | " + q.getOptionC());
+    jCheckBox4.setText("D | " + q.getOptionD());
+    // reset checkboxes
+    jCheckBox1.setSelected(false);
+    jCheckBox2.setSelected(false);
+    jCheckBox3.setSelected(false);
+    jCheckBox4.setSelected(false);
+}
+
+private void nextQuestion() {
+    // figure out which checkbox is selected
+    String selected = null;
+    if (jCheckBox1.isSelected()) selected = "A";
+    else if (jCheckBox2.isSelected()) selected = "B";
+    else if (jCheckBox3.isSelected()) selected = "C";
+    else if (jCheckBox4.isSelected()) selected = "D";
+
+    if (selected == null) {
+        JOptionPane.showMessageDialog(Jautajumi, "Please select at least one answer!");
+        return;
+    }
+
+    testSession.submitAnswer(selected);
+
+    if (testSession.hasNext()) {
+        loadQuestion();
+    } else {
+        TestResult result = testSession.getResult();
+        dbService.saveResult(loggedInUser.getId(), result.getCorrect(), result.getTotal(), result.getGrade());
+        Jautajumi.dispose();
+        jLabel17.setText("Your result: " + result.getCorrect() + "/" + result.getTotal() + " (" + String.format("%.1f", result.getPercentage()) + "%)");
+        jLabel19.setText("Final grade: " + result.getGrade() + "/10");
+        QuizResults.setTitle("Results");
+        QuizResults.setSize(450, 200);
+        QuizResults.setLocationRelativeTo(this);
+        QuizResults.setModal(true);
+        QuizResults.setVisible(true);
+    }
+}
+
+private void showResults() {
+    // called from results dialog close button if you add one
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog Jautajumi;

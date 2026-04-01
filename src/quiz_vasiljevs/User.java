@@ -31,5 +31,8 @@ public class User {
     public boolean checkPassword(String inputPassword) {
         return password.equals(inputPassword);
     }
+    public int getId() {
+    return id;
 }
-//commit try 2
+}
+
