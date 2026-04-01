@@ -1,32 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package quiz_vasiljevs;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
- *
  * @author Glebs.Vasiljev
  */
 public class DatabaseService {
-     private static final String URL = "jdbc:derby://localhost:1527/QuizDBVasiljevs";
-    private static final String USER = "userdb";
-    private static final String PASS = "userdb";
+
+    private static String URL;
+    private static String USER;
+    private static String PASS;
     private Connection conn;
 
+    
     public DatabaseService() {
         try {
+            Properties props = new Properties();
+            InputStream input = getClass().getResourceAsStream("/config.properties");
+            props.load(input);
+
+            URL = props.getProperty("db.url");
+            USER = props.getProperty("db.user");
+            PASS = props.getProperty("db.password");
+
             conn = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Connected to Derby!");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("DB error: " + e.getMessage());
         }
     }
 
+    
     public User login(String login, String password) {
         String sql = "SELECT * FROM USERS WHERE LOGIN = ? AND PASSWORD = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -50,6 +58,7 @@ public class DatabaseService {
         return null;
     }
 
+
     public boolean addUser(String firstName, String lastName, String login, String password, String role) {
         String sql = "INSERT INTO USERS (FIRST_NAME, LAST_NAME, LOGIN, PASSWORD, ROLE) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -65,39 +74,40 @@ public class DatabaseService {
             return false;
         }
     }
+
     
     public List<Question> getQuestions() {
-    List<Question> questions = new ArrayList<>();
-    String sql = "SELECT * FROM QUESTIONS";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            questions.add(new Question(
-                rs.getInt("ID"),
-                rs.getString("QUESTION_TEXT"),
-                rs.getString("OPTION_A"),
-                rs.getString("OPTION_B"),
-                rs.getString("OPTION_C"),
-                rs.getString("OPTION_D"),
-                rs.getString("CORRECT_ANSWER")
-            ));
+        List<Question> questions = new ArrayList<>();
+        String sql = "SELECT * FROM QUESTIONS";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                questions.add(new Question(
+                    rs.getInt("ID"),
+                    rs.getString("QUESTION_TEXT"),
+                    rs.getString("OPTION_A"),
+                    rs.getString("OPTION_B"),
+                    rs.getString("OPTION_C"),
+                    rs.getString("OPTION_D"),
+                    rs.getString("CORRECT_ANSWER")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("getQuestions error: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("getQuestions error: " + e.getMessage());
+        return questions;
     }
-    return questions;
-}
 
-public void saveResult(int userId, int score, int total, int grade) {
-    String sql = "INSERT INTO RESULTS (USER_ID, SCORE, TOTAL, GRADE) VALUES (?, ?, ?, ?)";
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, userId);
-        ps.setInt(2, score);
-        ps.setInt(3, total);
-        ps.setInt(4, grade);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        System.out.println("saveResult error: " + e.getMessage());
+    public void saveResult(int userId, int score, int total, int grade) {
+        String sql = "INSERT INTO RESULTS (USER_ID, SCORE, TOTAL, GRADE) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, score);
+            ps.setInt(3, total);
+            ps.setInt(4, grade);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("saveResult error: " + e.getMessage());
+        }
     }
-}
 }
