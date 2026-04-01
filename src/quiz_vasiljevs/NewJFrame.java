@@ -70,6 +70,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -339,14 +340,17 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel19.setText("Final/Converted test result is ##/##");
 
+        jButton8.setText("Exit");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout QuizResultsLayout = new javax.swing.GroupLayout(QuizResults.getContentPane());
         QuizResults.getContentPane().setLayout(QuizResultsLayout);
         QuizResultsLayout.setHorizontalGroup(
             QuizResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QuizResultsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel16)
-                .addGap(147, 147, 147))
             .addGroup(QuizResultsLayout.createSequentialGroup()
                 .addGroup(QuizResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(QuizResultsLayout.createSequentialGroup()
@@ -355,9 +359,18 @@ public class NewJFrame extends javax.swing.JFrame {
                             .addComponent(jLabel18)
                             .addComponent(jLabel17)))
                     .addGroup(QuizResultsLayout.createSequentialGroup()
-                        .addGap(46, 46, 46)
+                        .addGap(44, 44, 44)
                         .addComponent(jLabel19)))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QuizResultsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(QuizResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QuizResultsLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(147, 147, 147))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, QuizResultsLayout.createSequentialGroup()
+                        .addComponent(jButton8)
+                        .addGap(41, 41, 41))))
         );
         QuizResultsLayout.setVerticalGroup(
             QuizResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,9 +381,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel18)
-                .addGap(37, 37, 37)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel19)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton8)
+                .addContainerGap())
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -553,6 +568,10 @@ public class NewJFrame extends javax.swing.JFrame {
      nextQuestion();
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    System.exit(0);
+    }//GEN-LAST:event_jButton8ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -661,6 +680,7 @@ private void showResults() {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
