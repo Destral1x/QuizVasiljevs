@@ -63,6 +63,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox4 = new javax.swing.JCheckBox();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         QuizResults = new javax.swing.JDialog();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -255,6 +257,10 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jCheckBox4.setText("D | ");
 
+        jButton6.setText("Previous question");
+
+        jButton7.setText("Next question");
+
         javax.swing.GroupLayout JautajumiLayout = new javax.swing.GroupLayout(Jautajumi.getContentPane());
         Jautajumi.getContentPane().setLayout(JautajumiLayout);
         JautajumiLayout.setHorizontalGroup(
@@ -279,6 +285,12 @@ public class NewJFrame extends javax.swing.JFrame {
                             .addComponent(jCheckBox3)
                             .addComponent(jCheckBox4))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(JautajumiLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton7)
+                .addGap(93, 93, 93))
         );
         JautajumiLayout.setVerticalGroup(
             JautajumiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,7 +311,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jCheckBox3)
                 .addGap(18, 18, 18)
                 .addComponent(jCheckBox4)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JautajumiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton6)
+                    .addComponent(jButton7))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
@@ -608,6 +624,8 @@ private void showResults() {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
